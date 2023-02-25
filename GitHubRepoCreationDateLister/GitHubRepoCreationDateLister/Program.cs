@@ -1,25 +1,40 @@
-﻿using System.Xml.Xsl;
+﻿using System.Diagnostics;
 
-if ( args.Length != 0) {
-    Console.WriteLine("usage: gh repo list -L 1000|GitHubRepoCreationDateLister");
+if ( args.Length != 2) {
+    Console.WriteLine("usage: gh repo list -L 1000|GitHubRepoCreationDateLister INPUT_FILE_NAME  OUTPUT_FILE_NAME");
     return;
 }
 
 var list = new List<Repo>();
 
-for(; ; ) {
-    var s = Console.ReadLine();
-    if (s == null) break;
-    var d = s.Split('\t');
-    list.Add(new Repo() { Name = getName(d[0]), Desc = d[1] });
+using (var reader = System.IO.File.OpenText(args[0]))
+{
+
+    for (; ; )
+    {
+        var s = reader.ReadLine();
+        if (s == null) break;
+        var d = s.Split('\t');
+        list.Add(new Repo() { Name = getName(d[0]), Desc = d[1] });
+    }
 }
 
+// TBW
 
-foreach (var item in list) {
-    Console.WriteLine($"{item.Name} {item.Desc}");
+using (var writer = System.IO.File.CreateText(args[1]))
+{
+    foreach (var item in list)
+    {
+        writer.WriteLine($"{item.Name} {item.Desc}");
+    }
 }
 
-Console.WriteLine("Done");
+ProcessStartInfo pi = new ProcessStartInfo()
+{
+    FileName = args[1],
+    UseShellExecute = true,
+};
+Process.Start(pi);
 
 string getName(string s) {
     int index = s.IndexOf("/");

@@ -2,7 +2,7 @@
   "profiles": {
     "GitHubRepoCreationDateLister": {
       "commandName": "Project",
-      "commandLineArgs": "<c:\\delme\\delme.txt"
+      "commandLineArgs": "c:\\delme\\delme.txt c:\\delme\\delme1.txt"
     }
   }
 }
